@@ -1,28 +1,33 @@
 # Drone GitHub App Token Plugin
 
-A [Drone](https://www.drone.io/) plugin for creating a GitHub App Installation Access Token. This plugin is based on the [Create GitHub App Token](https://github.com/actions/create-github-app-token) GitHub Action.
+A Drone plugin for creating a GitHub App Installation Access Token.
 
 ## Usage
 
 This plugin can be used to create a GitHub App installation access token in your Drone pipelines. The token can be used for repository or organizational access with specified permissions.
 
-### Example Pipeline
+### Example Pipeline YAML
 
 ```yaml
-kind: pipeline
-type: docker
-name: create-github-token
-
-steps:
-  - name: create-token
-    image: harnessio/drone-github-app-token
-    settings:
-      app_id: 
-        from_secret: github_app_id
-      private_key:
-        from_secret: github_app_private_key
-      permission_contents: write
-      permission_pull_requests: write
+              - step:
+                  identifier: Plugin_1
+                  type: Plugin
+                  name: Plugin_1
+                  spec:
+                    connectorRef: opopensourceops
+                    image: harnesscommunitytest/drone-github-app-token:test
+                    settings:
+                      app_id: "1398395"
+                      private_key: <+secrets.getValue("opgithubappkey")> # Harness Secret of Type "File"
+                      permission_contents: write
+              - step:
+                  identifier: Run_1
+                  type: Run
+                  name: Run_1
+                  spec:
+                    shell: Sh
+                    command: "curl -H \"Authorization: token <+execution.steps.Plugin_1.output.outputVariables.GITHUB_APP_TOKEN>\"\
+                      \ https://api.github.com/repos/ompragash/notes/contents"
 ```
 
 ### Settings
@@ -46,7 +51,7 @@ For example:
 ```yaml
 steps:
   - name: create-token
-    image: harnessio/drone-github-app-token
+    image: harnesscommunitytest/drone-github-app-token
     settings:
       app_id: 
         from_secret: github_app_id
@@ -119,15 +124,3 @@ The plugin will set the following environment variables:
 | `GITHUB_APP_SLUG` | GitHub App slug |
 
 These can be used in subsequent pipeline steps.
-
-## Building
-
-Build the Docker image with:
-
-```bash
-docker build -t harnessio/drone-github-app-token -f docker/Dockerfile .
-```
-
-## License
-
-This project is licensed under the Blue Oak Model License - see the LICENSE file for details.
