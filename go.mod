@@ -1,6 +1,6 @@
 module github.com/harness-community/drone-github-app-token
 
-go 1.20
+go 1.22.7
 
 require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
