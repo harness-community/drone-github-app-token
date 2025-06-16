@@ -15,10 +15,10 @@ This plugin can be used to create a GitHub App installation access token in your
                   name: Plugin_1
                   spec:
                     connectorRef: opopensourceops
-                    image: harnesscommunitytest/drone-github-app-token:test
+                    image: plugins/github-app-token:latest
                     settings:
                       app_id: "1398395"
-                      private_key: <+secrets.getValue("opgithubappkey")> # Harness Secret of Type "File"
+                      private_key: <+secrets.getValue("opgithubappkey")>
                       permission_contents: write
               - step:
                   identifier: Run_1
@@ -28,6 +28,7 @@ This plugin can be used to create a GitHub App installation access token in your
                     shell: Sh
                     command: "curl -H \"Authorization: token <+execution.steps.Plugin_1.output.outputVariables.GITHUB_APP_TOKEN>\"\
                       \ https://api.github.com/repos/ompragash/notes/contents"
+  name: op-drone-github-app-token
 ```
 
 ### Settings
