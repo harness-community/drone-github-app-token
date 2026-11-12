@@ -1,0 +1,6 @@
+FROM arm64v8/alpine:3.18
+
+RUN apk add --no-cache ca-certificates
+
+COPY release/linux/arm64/drone-github-app-token /bin/drone-github-app-token
+ENTRYPOINT ["/bin/drone-github-app-token"]
